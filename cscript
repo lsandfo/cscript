@@ -1,12 +1,12 @@
 #!/bin/sh
 
-# Variables, that may change for the best taste. Uncommand a option if
+# Variables, that may change for the best taste. Uncommand or command a option if
 # you don't want to use a system one.
-COMPILER="gcc"
-DEBUGGER="gdb"
-# EDITRO="vim"
-# CUSTOM_PATH="/home/lsandfo/tmpfs"
-
+COMPILER="gcc" # Choose a compiler
+DEBUGGER="gdb" # Choose a debugger
+# EDITOR="vim" # You default Editor
+# CUSTOM_PATH="/home/lsandfo/tmpfs" # Set a path where the code will temporary or persistent stored
+CREATE_MAIN="yes" # A new session contains a default main function and includes.
 # If no custom path is set /dev/shm is used. If there is
 # no /dev/shm present on you system, the /tmp directory is used.
 if [ $CUSTOM_PATH ]; then
@@ -36,7 +36,8 @@ usage="Usage: $0 [-rndh]\n
 # Create the "empty" c file. Only add the bare basics, cause typing them
 # every time is annoying.
 build_frame() {
-		echo "#include<stdio.h>
+		if [ $CREATE_MAIN = "yes" ]; then
+			echo "#include<stdio.h>
 #include<stdlib.h>
 
 int main(void){
@@ -44,7 +45,11 @@ int main(void){
 
 		return EXIT_SUCCESS;
 }
-		" > $temp_path/cscript.c
+" > $temp_path/cscript.c
+
+		else
+				echo "" > $temp_path/cscript.c
+		fi
 		}
 
 
