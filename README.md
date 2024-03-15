@@ -3,15 +3,31 @@ A tool to run c code like an Interpreter would do.
 
 
 ## Description
-This little tool creates a temporary file, open it up in you favorite editor, compile and run it.
+This little tool runs the conntent of a given file inside of a default main function,
+including the stdio.h and stdlib.h, compile it and run it.
+If no file is give it creates a temporary file, open it up in you favorite editor, compile and run it.
 The idea about it is to avoid this steps, doing by hand. 
 I was annoyed about this, while i start learning C an just want to test an play around with the syntax, so i decided to automate this.
 
+## Examples
+
+As little example a passed file could look like this:
+~~~ c
+int i = 42;
+char *name = "World";
+
+printf("Hello %s, the answer is %d", name, i);
+
+~~~
+
+As you can see no main function is needed or any return. 
 
 ## How it works
 It's actually realy simple:
+Starting the Script with a file as argument, it will read the conntent, wrap it inside of a default main function in /dev/shm/, compile it and run it.
+This should feel like you would run a script in bash or python for example.
 Starting the Script without any arg's for the first time will created a file in '/dev/shm/cscript.c' if not exist, and open it up
-with the editor from the EDITOR environment variable. By default a simple main function is present.
+with the editor from the EDITOR environment variable. By default a simple main function is present. If a file was opend previous it will open instead of a new one.
 After the work is done, the file is saved and the editor is closed, the code will compiled as 'script.elf' and executed.
 Running the Script again without arg's, or the '-r' flag, will reopen the file to edit it again, compile and execute it.
 
@@ -35,6 +51,7 @@ Here all current flags:
 
 |Flag | Usage |
 |- |- |
+|file | Run it like a script |
 | -h | Help Menu |
 | -r or none | Reopen the last file or create a new one if not existing |
 | -n | Clear the cache and create and open a new template |
@@ -46,3 +63,6 @@ As said before, i wrote this script while learn C.
 There is a good chance that i rewrite this complete thing in C, 
 just for fun and learning.
 
+
+## Bugs
+- Passing a file which contains a '\n', will litteraly break the line at the given point and end up in a c syntax error while compiling.
