@@ -26,6 +26,7 @@ As you can see no main function is needed or any return.
 It's actually realy simple:
 Starting the Script with a file as argument, it will read the conntent, wrap it inside of a default main function in /dev/shm/, compile it and run it.
 This should feel like you would run a script in bash or python for example.
+** If you need anything using a backslash '\' you need to escape it by a second one '\\'!**
 Starting the Script without any arg's for the first time will created a file in '/dev/shm/cscript.c' if not exist, and open it up
 with the editor from the EDITOR environment variable. By default a simple main function is present. If a file was opend previous it will open instead of a new one.
 After the work is done, the file is saved and the editor is closed, the code will compiled as 'script.elf' and executed.
@@ -65,4 +66,5 @@ just for fun and learning.
 
 
 ## Bugs
-- Passing a file which contains a '\n', will litteraly break the line at the given point and end up in a c syntax error while compiling.
+- Passing a file which contains any '\*', like newline '\n', will litteraly break the line at the given point and end up in a c syntax error while compiling.
+  Please use a second backslash to escape this '\\n'  
