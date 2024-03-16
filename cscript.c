@@ -12,6 +12,8 @@ void new_edit();
 void debug();
 void usage(char *argv);
 int test_file();
+void run_script(char *script);
+
 
 // Configurations
 char COMPILER[MAX_LENGTH] = "gcc",
@@ -39,6 +41,8 @@ int main(int argc, char *argv[]){
 		}
 		else if ((strcmp(argv[1], "-d" )) == 0)
 				debug();
+		else
+				run_script(argv[1]);
 
 
 		return EXIT_SUCCESS;		
@@ -92,6 +96,31 @@ void build_frame(char *data){
 		else
 				fprintf(frame, "%s", data);
 		fclose(frame);
+}
+
+// Runs the given script by copy the conntent from the file to a buffer,
+// pass it to build_frame(), compile and run it.
+void run_script(char *script){
+		char *buffer = NULL;
+		int position = 0;
+		FILE *data = fopen(script, "r");
+		if (data == NULL){
+			perror("Can't read from given cscript");
+			exit(EXIT_FAILURE);
+		}
+		fseek(data, 0, SEEK_END);
+		position = ftell(data);
+		buffer = malloc(sizeof(char) * position);
+		if (buffer == NULL){
+			printf("Cant allocate memory to load the cscript. It is too big for your memory!\n");
+			exit(EXIT_FAILURE);
+		}
+		rewind(data);
+		fread(buffer, 1 , position, data);
+		build_frame(buffer);
+		free(buffer);
+		system(strcat(COMPILER, " -g -o /dev/shm/cscript.elf /dev/shm/cscript.c"));
+		system("/dev/shm/cscript.elf");	
 }
 
 // Test if file exist, if not return 1, else return 0.
