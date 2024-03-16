@@ -11,7 +11,7 @@ void edit();
 void new_edit();
 void debug();
 void usage(char *argv);
-
+int test_file();
 
 // Configurations
 char COMPILER[MAX_LENGTH] = "gcc",
@@ -20,6 +20,8 @@ char COMPILER[MAX_LENGTH] = "gcc",
 	 EDITOR[MAX_LENGTH] = "vim";
 const bool CREATE_MAIN = true;
 
+// Static Global Variable
+char *empty_data = "\n";
 
 // Main
 int main(int argc, char *argv[]){
@@ -32,10 +34,11 @@ int main(int argc, char *argv[]){
 		else if ((strcmp(argv[1], "-r" )) == 0)
 				edit();
 		else if ((strcmp(argv[1], "-n" )) == 0){
-				char *data = "\n";
-				build_frame(data);
+				build_frame(empty_data);
 				edit();
 		}
+		else if ((strcmp(argv[1], "-d" )) == 0)
+				debug();
 
 
 		return EXIT_SUCCESS;		
@@ -62,16 +65,13 @@ void usage(char *argv){
 }
 
 // The function to edit the file
-void edit(){
-		FILE *tmp_data = fopen("/dev/shm/cscript.c", "a");
-		if (tmp_data == NULL){
-			perror("Cant open /dev/shm file");
-			exit(EXIT_FAILURE);
-		}
-		fclose(tmp_data);
+void edit(){	
+		int test = test_file();
+		if (test)
+				build_frame(empty_data);
 		system(strcat(EDITOR, " /dev/shm/cscript.c"));
-		system(strcat(COMPILER, " -g -o /dev/shm/script.elf /dev/shm/cscript.c"));
-		system("/dev/shm/script.elf");
+		system(strcat(COMPILER, " -g -o /dev/shm/cscript.elf /dev/shm/cscript.c"));
+		system("/dev/shm/cscript.elf");
 }
 
 // Create Main function frame
@@ -94,3 +94,21 @@ void build_frame(char *data){
 		fclose(frame);
 }
 
+// Test if file exist, if not return 1, else return 0.
+int test_file(){
+		FILE *file = fopen("/dev/shm/cscript.c", "r");
+		if (file == NULL)
+				return 1;
+		else
+				fclose(file);
+		return 0;
+}
+ void debug(){
+		int test = test_file();
+		if (test){
+				printf("There is nothing to debug...\n");
+				exit(EXIT_FAILURE);
+		}
+		else
+				system(strcat(DEBUGGER, " /dev/shm/cscript.elf"));
+}
