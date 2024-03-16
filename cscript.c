@@ -18,7 +18,6 @@ void run_script(char *script);
 // Configurations
 char COMPILER[MAX_LENGTH] = "gcc",
 	 DEBUGGER[MAX_LENGTH] = "gdb",
-	 CUSTOM_PATH[MAX_LENGTH] = "/dev/shm",
 	 EDITOR[MAX_LENGTH] = "vim";
 const bool CREATE_MAIN = true;
 
