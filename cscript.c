@@ -6,7 +6,7 @@
 #define MAX_LENGTH 50
 
 // List of functions
-void build_frame(FILE *data);
+void build_frame(char *data);
 void edit();
 void new_edit();
 void debug();
@@ -16,7 +16,7 @@ void usage(char *argv);
 // Configurations
 char COMPILER[MAX_LENGTH] = "gcc",
 	 DEBUGGER[MAX_LENGTH] = "gdb",
-	 *CUSTOM_PATH = NULL,
+	 CUSTOM_PATH[MAX_LENGTH] = "/dev/shm",
 	 EDITOR[MAX_LENGTH] = "vim";
 const bool CREATE_MAIN = true;
 
@@ -24,12 +24,18 @@ const bool CREATE_MAIN = true;
 // Main
 int main(int argc, char *argv[]){
 		if (argc == 1){
-			return EXIT_FAILURE;
+				edit();
+				return EXIT_SUCCESS;
 		}
 		else if ((strcmp(argv[1], "-h" )) == 0)
 				usage(argv[0]);
-		else if ((strcmp(argv[1], "-t" )) == 0)
+		else if ((strcmp(argv[1], "-r" )) == 0)
 				edit();
+		else if ((strcmp(argv[1], "-n" )) == 0){
+				char *data = "\n";
+				build_frame(data);
+				edit();
+		}
 
 
 		return EXIT_SUCCESS;		
@@ -64,6 +70,27 @@ void edit(){
 		}
 		fclose(tmp_data);
 		system(strcat(EDITOR, " /dev/shm/cscript.c"));
+		system(strcat(COMPILER, " -g -o /dev/shm/script.elf /dev/shm/cscript.c"));
+		system("/dev/shm/script.elf");
 }
 
+// Create Main function frame
+void build_frame(char *data){
+		FILE *frame = fopen("/dev/shm/cscript.c", "w");
+		if (frame == NULL){
+			perror("Cant build frame");
+			exit(EXIT_FAILURE);
+		}	
+		if (CREATE_MAIN == true){
+				fprintf(frame, "#include<stdio.h>\n"
+					"#include<stdlib.h>\n"
+					"#include<string.h>\n\n\n"
+					"int main(void){\n"
+					"%s\n"
+					"\treturn EXIT_SUCCESS;\n}", data);
+		}
+		else
+				fprintf(frame, "%s", data);
+		fclose(frame);
+}
 
