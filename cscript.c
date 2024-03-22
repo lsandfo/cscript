@@ -26,6 +26,7 @@ char *empty_data = "\n";
 
 // Main
 int main(int argc, char *argv[]){
+		// Check for environment variable 'EDITOR' and replace it with the Internal, if not empty
 		ENV_EDITOR = getenv("EDITOR");
 		if (ENV_EDITOR != NULL)
 				strcpy(EDITOR, ENV_EDITOR);
