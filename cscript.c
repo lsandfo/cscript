@@ -8,7 +8,6 @@
 // List of functions
 void build_frame(char *data);
 void edit();
-void new_edit();
 void debug();
 void usage(char *argv);
 int test_file();
@@ -18,7 +17,8 @@ void run_script(char *script);
 // Configurations
 char COMPILER[MAX_LENGTH] = "gcc",
 	 DEBUGGER[MAX_LENGTH] = "gdb",
-	 EDITOR[MAX_LENGTH] = "vim";
+	 EDITOR[MAX_LENGTH] = "vim",
+	 *ENV_EDITOR = NULL;
 const bool CREATE_MAIN = true;
 
 // Static Global Variable
@@ -26,6 +26,11 @@ char *empty_data = "\n";
 
 // Main
 int main(int argc, char *argv[]){
+		ENV_EDITOR = getenv("EDITOR");
+		if (ENV_EDITOR != NULL)
+				strcpy(EDITOR, ENV_EDITOR);
+
+	// Check for given arguments or file
 		if (argc == 1){
 				edit();
 				return EXIT_SUCCESS;
