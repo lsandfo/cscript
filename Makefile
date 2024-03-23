@@ -1,7 +1,7 @@
-cscript.elf: cscript.c
+cscript: cscript.c
 	gcc -o cscript cscript.c
 
-install: cscript.elf
+install: cscript
 	cp cscript /usr/sbin/cscript
 
 uninstall: /usr/sbin/cscript
